@@ -9,9 +9,9 @@ import { UserConfirmation } from '../model/user.conformation';
 import { UserPassword } from '../model/user.password';
 import { formatString } from '../util/string';
 import { Optional } from '../util/optional';
-import { config } from '../util/configuration';
 import { NotFoundError } from '../util/notfound.error';
 import { ExpiredError } from '../util/expired.error';
+import { ConfigService } from '../config/config.service';
 
 export enum ErrorMessages {
   USERNAME_ALREADY_EXISTS = 'username already in use',
@@ -28,7 +28,7 @@ export class UsersService {
   private users: User[];
   private userConfirmations: UserConfirmation[];
 
-  constructor() {
+  constructor( private readonly configService: ConfigService) {
     this.userConfirmations = [];
     this.users = [];
   }
@@ -120,7 +120,7 @@ export class UsersService {
     const confirmation: UserConfirmation = {
       conformationKey: crypto.randomBytes(16).toString('base64'),
       email,
-      expires: new Date(Date.now() + config.confirmation.duration),
+      expires: new Date(Date.now() + this.configService.config.confirmation.duration),
     };
     this.userConfirmations.push(confirmation);
     return confirmation;

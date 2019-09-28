@@ -5,11 +5,12 @@ import * as jwt from 'jsonwebtoken';
 import { AppController, ConfirmationResponse, LoginResponse } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { getValidUser } from './users/users.service.spec';
+import { getValidUser } from "./users/users.data";
 import { UsersService } from './users/users.service';
 import { UserConfirmation } from './model/user.conformation';
 import { Optional } from './util/optional';
 import { User } from './model/User';
+import { ConfigModule } from './config/config.module';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -18,8 +19,13 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      imports: [AuthModule, UsersModule],
-      providers: [],
+      imports: [
+        AuthModule,
+        UsersModule,
+        ConfigModule,
+      ],
+      providers: [
+      ],
     }).compile();
 
     appController = app.get<AppController>(AppController);

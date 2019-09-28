@@ -3,10 +3,11 @@ import * as jwt from 'jsonwebtoken';
 
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
-import { getValidUser } from '../users/users.service.spec';
+import { getValidUser } from '../users/users.data';
 import { UsersService } from '../users/users.service';
 import { UserExternal } from '../model/user.external';
 import { Optional } from '../util/optional';
+import { ConfigModule } from '../config/config.module';
 
 describe('AuthService', () => {
 
@@ -15,8 +16,13 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
-      imports: [UsersModule],
+      providers: [
+        AuthService,
+      ],
+      imports: [
+        UsersModule,
+        ConfigModule,
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);

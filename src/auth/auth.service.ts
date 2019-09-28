@@ -8,12 +8,13 @@ import { UserExternal } from '../model/user.external';
 import { User } from '../model/User';
 import { UserToken } from '../model/user.token';
 import { Optional, None } from '../util/optional';
-import { config } from '../util/configuration';
+import { ConfigService } from '../config/config.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
   ) { }
 
   async validateUserLogin({ email, password: pass }: UserLogin): Promise<Optional<UserExternal>> {
@@ -31,11 +32,11 @@ export class AuthService {
 
   async generateToken(user: UserToken): Promise<string> {
     const exp = new Date();
-    exp.setDate(exp.getDate() + config.token.duration);
+    exp.setDate(exp.getDate() + this.configService.config.token.duration);
     return jwt.sign({
       ...user,
-      exp: new Date(Date.now() + config.token.duration).getTime() / 1000,
-    }, config.token.secret);
+      exp: new Date(Date.now() + this.configService.config.token.duration).getTime() / 1000,
+    }, this.configService.config.token.secret);
   }
 
   private async isUserLoginValid(user: User, password: string) {

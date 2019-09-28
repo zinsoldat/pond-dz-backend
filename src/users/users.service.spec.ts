@@ -4,38 +4,8 @@ import * as bcrypt from 'bcrypt';
 import { UsersService, ErrorMessages } from './users.service';
 import { User } from '../model/User';
 import { formatString } from '../util/string';
-
-export function getValidUsers(): User[] {
-  return [{
-      userId: '1',
-      username: 'john',
-      email: 'john@mail.com',
-      password: 'changeme',
-      confirmed: true,
-      registrationDate: new Date(),
-    },
-    {
-      userId: '2',
-      username: 'chris',
-      email: 'chris@mail.com',
-      password: 'secret',
-      confirmed: true,
-      registrationDate: new Date(),
-    },
-    {
-      userId: '3',
-      username: 'maria',
-      email: 'maria@mail.com',
-      password: 'guess',
-      confirmed: false,
-      registrationDate: new Date(),
-    },
-  ];
-}
-export function getValidUser(): User {
-  const users = getValidUsers();
-  return users[ Math.ceil(Math.random() * users.length) - 1 ];
-}
+import { ConfigModule } from '../config/config.module';
+import { getValidUser } from './users.data';
 
 describe('UsersService', () => {
 
@@ -43,7 +13,12 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
+      providers: [
+        UsersService,
+      ],
+      imports: [
+        ConfigModule,
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
